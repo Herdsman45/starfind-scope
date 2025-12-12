@@ -18,7 +18,9 @@ var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker: Tesseract.Worker;
 
-output.insertAdjacentHTML('beforeend', `<div class="version">v. 1.1.3</div>`);
+const version = '1.1.3';
+
+output.insertAdjacentHTML('beforeend', `<div class="version">v. ${version}</div>`);
 
 async function init() {
     if (window.alt1) {
@@ -53,7 +55,7 @@ async function init() {
         output.insertAdjacentHTML(
             'beforeend',
             `<a href='${addappurl}' class="app-link">
-                <div class="nisbutton">Alt1 not detected, click here to add this app to Alt1</div>
+                <div class="nisbutton">Alt1 not detected, click here to add this app to Alt1 (v. ${version})</div>
             </a>`
         );
     }
