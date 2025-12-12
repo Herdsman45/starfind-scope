@@ -6425,7 +6425,6 @@ function recognizeTextFromImage(worker, image) {
                     finalText = finalText.replace('mines', 'minutes');
                     // Normalize the input string
                     finalText = finalText.replace('t0', 'to');
-                    finalText = finalText.replace(/(\d).\s*(minutes)/g, '$1 $2');
                     // Ensure proper spacing around 'to' and 'minutes'
                     finalText = finalText
                         .replace(/(\d)\s*to\s*(\d)/g, '$1 to $2')
@@ -6794,7 +6793,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker;
-var version = '1.1.3';
+var version = '1.1.4';
 output.insertAdjacentHTML('beforeend', "<div class=\"version\">v. ".concat(version, "</div>"));
 function init() {
     return __awaiter(this, void 0, void 0, function () {
