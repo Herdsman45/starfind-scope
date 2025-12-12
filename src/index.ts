@@ -55,7 +55,7 @@ async function init() {
         output.insertAdjacentHTML(
             'beforeend',
             `<a href='${addappurl}' class="app-link">
-                <div class="nisbutton">Alt1 not detected, click here to add this app to Alt1 (v. ${version})</div>
+                <div class="nisbutton">Alt1 not detected, click here to add this app to Alt1</div>
             </a>`
         );
     }
