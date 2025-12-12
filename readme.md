@@ -28,3 +28,5 @@ npm run serve
 ```
 
 You must open localhost:9000 in the Alt1 browser and click the `add app` button that appears in order to get access to alt1 functionalities.
+
+To deploy to Pages, you must run `npm run build` and push the docs, since that is the source of truth for Pages.
