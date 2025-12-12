@@ -93,6 +93,8 @@ export async function recognizeTextFromImage(
         // Normalize the input string
         finalText = finalText.replace('t0', 'to');
 
+        finalText = finalText. replace(/(\d).\s*(minutes)/g, '$1 $2');
+
         // Ensure proper spacing around 'to' and 'minutes'
         finalText = finalText
             .replace(/(\d)\s*to\s*(\d)/g, '$1 to $2')
