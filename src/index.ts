@@ -18,9 +18,12 @@ var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker: Tesseract.Worker;
 
-const version = '1.1.4';
+const version = '1.1.5';
 
-output.insertAdjacentHTML('beforeend', `<div class="version">v. ${version}</div>`);
+output.insertAdjacentHTML(
+    'beforeend',
+    `<div class="version">v. ${version}</div>`
+);
 
 async function init() {
     if (window.alt1) {
