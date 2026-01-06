@@ -6430,6 +6430,7 @@ function recognizeTextFromImage(worker, image) {
                     finalText = finalText.replace('. next', ' next');
                     finalText = finalText.replace(/\./g, '');
                     finalText = finalText.replace('S4', '54');
+                    finalText = finalText.replace(/next(\d+)/g, 'next $1');
                     // Ensure proper spacing around 'to' and 'minutes'
                     finalText = finalText
                         .replace(/(\d)\s*to\s*(\d)/g, '$1 to $2')
