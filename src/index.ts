@@ -18,7 +18,7 @@ var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker: Tesseract.Worker;
 
-const version = '1.1.5';
+const version = '1.1.6';
 
 output.insertAdjacentHTML(
     'beforeend',
@@ -122,7 +122,7 @@ async function findDialogAndReadData(img: a1lib.ImgRef) {
 
     let text = await recognizeTextFromImage(
         worker,
-        new Blob([pngImage], { type: 'image/png' })
+        new Blob([pngImage as any], { type: 'image/png' })
     );
 
     // let text = `You see a shooting star!

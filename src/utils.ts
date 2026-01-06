@@ -96,6 +96,8 @@ export async function recognizeTextFromImage(
         finalText = finalText.replace('. minutes', ' minutes');
         finalText = finalText.replace('. to', ' to');
         finalText = finalText.replace('. next', ' next');
+        finalText = finalText.replace(/\./g, '');
+        finalText = finalText.replace('S4', '54');
 
         // Ensure proper spacing around 'to' and 'minutes'
         finalText = finalText
