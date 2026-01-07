@@ -6430,6 +6430,8 @@ function recognizeTextFromImage(worker, image) {
                     finalText = finalText.replace('. next', ' next');
                     finalText = finalText.replace(/\./g, '');
                     finalText = finalText.replace('S4', '54');
+                    finalText = finalText.replace('3d', '34');
+                    finalText = finalText.replace('B minutes', '8 minutes');
                     finalText = finalText.replace(/next(\d+)/g, 'next $1');
                     // Ensure proper spacing around 'to' and 'minutes'
                     finalText = finalText
@@ -6799,7 +6801,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker;
-var version = '1.1.6';
+var version = '1.1.7';
 output.insertAdjacentHTML('beforeend', "<div class=\"version\">v. ".concat(version, "</div>"));
 function init() {
     return __awaiter(this, void 0, void 0, function () {
