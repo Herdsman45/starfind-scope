@@ -13,10 +13,13 @@ import {
     recognizeTextFromImage,
 } from './utils';
 import Tesseract, { createWorker } from 'tesseract.js';
+import { OCRLogger } from './logger';
 
 var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker: Tesseract.Worker;
+
+const logger = OCRLogger.getInstance();
 
 const version = '1.1.7';
 
@@ -47,6 +50,16 @@ async function init() {
             output.insertAdjacentHTML(
                 'beforeend',
                 `<div class="nisbutton" onclick="StarScopeCall.capture();">Get "/call" command</div>`
+            );
+
+            output.insertAdjacentHTML(
+                'beforeend',
+                `<div class="log-controls">
+                    <button class="nisbutton small" onclick="StarScopeCall.showLogStats();">Log Stats</button>
+                    <button class="nisbutton small" onclick="StarScopeCall.exportLogsJSON();">Export JSON</button>
+                    <button class="nisbutton small" onclick="StarScopeCall.exportLogsCSV();">Export CSV</button>
+                    <button class="nisbutton small danger" onclick="StarScopeCall.clearLogs();">Clear Logs</button>
+                </div>`
             );
         } catch (err) {
             console.error(err);
@@ -120,25 +133,40 @@ async function findDialogAndReadData(img: a1lib.ImgRef) {
 
     const pngImage = await pixels.toFileBytes('image/png');
 
-    let text = await recognizeTextFromImage(
+    const { rawText, cleanedText } = await recognizeTextFromImage(
         worker,
         new Blob([pngImage as any], { type: 'image/png' })
     );
 
-    // let text = `You see a shooting star!
+    // let cleanedText = `You see a shooting star!
     //             The star looks like itwill land in The Lost Grove in the next 10 12 minutes.
     //             The star looks to be size 4,`;
 
-    console.log(text);
+    console.log(cleanedText);
 
     const world = alt1.currentWorld;
-    const location = getLocation(text);
-    const size = getSize(text);
-    const time = getTime(text);
+    const location = getLocation(cleanedText);
+    const size = getSize(cleanedText);
+    const time = getTime(cleanedText);
 
     const command = `/call world: ${world} region: ${location} size: ${size} relative-time: ${time}`;
 
     console.log(`Command: ${command}`);
+
+    // Log the OCR data
+    logger.addLog({
+        timestamp: start,
+        rawOCR: rawText,
+        cleanedText: cleanedText,
+        parsedData: {
+            world,
+            location,
+            size,
+            time,
+        },
+        finalCommand: command,
+        processingTime: new Date().getTime() - start,
+    });
 
     logs.innerHTML = '';
 
@@ -163,4 +191,36 @@ async function findDialogAndReadData(img: a1lib.ImgRef) {
     console.log(
         `---------------------------------------------------------------------------------------------------------------------`
     );
+}
+
+export function showLogStats() {
+    const stats = logger.getStats();
+    const oldestDate = stats.oldestLog ? new Date(stats.oldestLog).toLocaleString() : 'N/A';
+    const newestDate = stats.newestLog ? new Date(stats.newestLog).toLocaleString() : 'N/A';
+    
+    logs.innerHTML = `
+        <div class="log-stats">
+            <h3>OCR Log Statistics</h3>
+            <p><strong>Total Logs:</strong> ${stats.total}</p>
+            <p><strong>Errors:</strong> ${stats.errors}</p>
+            <p><strong>Avg Processing Time:</strong> ${stats.avgProcessingTime}ms</p>
+            <p><strong>Oldest Log:</strong> ${oldestDate}</p>
+            <p><strong>Newest Log:</strong> ${newestDate}</p>
+        </div>
+    `;
+}
+
+export function exportLogsJSON() {
+    logger.exportAsJSON();
+}
+
+export function exportLogsCSV() {
+    logger.exportAsCSV();
+}
+
+export function clearLogs() {
+    if (confirm('Are you sure you want to clear all logs?')) {
+        logger.clearLogs();
+        logs.innerHTML = '<div class="text-center success">Logs cleared!</div>';
+    }
 }

@@ -455,6 +455,44 @@ body.scrollreset * {
     overflow: hidden !important;
 }
 
+.log-controls {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.nisbutton.small {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.nisbutton.danger {
+    background-color: #d9534f;
+}
+
+.nisbutton.danger:hover {
+    background-color: #c9302c;
+}
+
+.log-stats {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.log-stats h3 {
+    margin-top: 0;
+    color: #fff;
+}
+
+.log-stats p {
+    margin: 5px 0;
+    color: #ccc;
+}
+
 /*font stolen from jagex*/
 @font-face {
     font-family: 'trajan-pro-3';

@@ -44,7 +44,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 export async function recognizeTextFromImage(
     worker: Tesseract.Worker,
     image: Blob
-) {
+): Promise<{ rawText: string; cleanedText: string }> {
     try {
         // Create a canvas to resize the image
         const canvas = document.createElement('canvas');
@@ -81,6 +81,9 @@ export async function recognizeTextFromImage(
         const {
             data: { text },
         } = await worker.recognize(image);
+
+        // Store the raw text before cleaning
+        const rawText = text;
 
         let finalText = text;
 
@@ -131,7 +134,7 @@ export async function recognizeTextFromImage(
             }
         }
 
-        return finalText;
+        return { rawText, cleanedText: finalText };
     } catch (error) {
         console.error('Error during OCR:', error);
         throw error;
