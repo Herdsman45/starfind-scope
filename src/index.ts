@@ -202,16 +202,33 @@ export function showLogStats() {
         ? new Date(stats.newestLog).toLocaleString()
         : 'N/A';
 
-    logs.innerHTML = `
-        <div class="log-stats">
-            <h3>OCR Log Statistics</h3>
-            <p><strong>Total Logs:</strong> ${stats.total}</p>
-            <p><strong>Errors:</strong> ${stats.errors}</p>
-            <p><strong>Avg Processing Time:</strong> ${stats.avgProcessingTime}ms</p>
-            <p><strong>Oldest Log:</strong> ${oldestDate}</p>
-            <p><strong>Newest Log:</strong> ${newestDate}</p>
-        </div>
-    `;
+    // Create elements safely without innerHTML
+    const statsDiv = document.createElement('div');
+    statsDiv.className = 'log-stats';
+
+    const title = document.createElement('h3');
+    title.textContent = 'OCR Log Statistics';
+    statsDiv.appendChild(title);
+
+    const createStatLine = (label: string, value: string | number) => {
+        const p = document.createElement('p');
+        const strong = document.createElement('strong');
+        strong.textContent = label + ': ';
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(String(value)));
+        return p;
+    };
+
+    statsDiv.appendChild(createStatLine('Total Logs', stats.total));
+    statsDiv.appendChild(createStatLine('Errors', stats.errors));
+    statsDiv.appendChild(
+        createStatLine('Avg Processing Time', `${stats.avgProcessingTime}ms`)
+    );
+    statsDiv.appendChild(createStatLine('Oldest Log', oldestDate));
+    statsDiv.appendChild(createStatLine('Newest Log', newestDate));
+
+    logs.innerHTML = '';
+    logs.appendChild(statsDiv);
 }
 
 export function exportLogsJSON() {
@@ -225,6 +242,10 @@ export function exportLogsCSV() {
 export function clearLogs() {
     if (confirm('Are you sure you want to clear all logs?')) {
         logger.clearLogs();
-        logs.innerHTML = '<div class="text-center success">Logs cleared!</div>';
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'text-center success';
+        messageDiv.textContent = 'Logs cleared!';
+        logs.innerHTML = '';
+        logs.appendChild(messageDiv);
     }
 }

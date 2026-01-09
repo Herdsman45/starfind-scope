@@ -42,7 +42,9 @@ export class OCRLogger {
             if (
                 error instanceof DOMException &&
                 (error.name === 'QuotaExceededError' ||
-                    error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
+                    error.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+                    error.code === 22 ||
+                    error.code === 1014)
             ) {
                 console.warn(
                     'Storage quota exceeded, clearing old logs and retrying'
@@ -103,7 +105,7 @@ export class OCRLogger {
             const dataStr = JSON.stringify(logs, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
 
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const timestamp = this.getTimestampForFilename();
             const filename = `ocr_logs_${timestamp}.json`;
 
             this.downloadBlob(dataBlob, filename);
@@ -154,7 +156,7 @@ export class OCRLogger {
             const csvContent = [headers.join(','), ...rows].join('\n');
             const dataBlob = new Blob([csvContent], { type: 'text/csv' });
 
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const timestamp = this.getTimestampForFilename();
             const filename = `ocr_logs_${timestamp}.csv`;
 
             this.downloadBlob(dataBlob, filename);
@@ -230,10 +232,20 @@ export class OCRLogger {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(logs));
     }
 
+    private getTimestampForFilename(): string {
+        return new Date().toISOString().replace(/[:.]/g, '-');
+    }
+
     private escapeCSV(value: string | number): string {
         const str = String(value);
-        // Escape quotes by doubling them and wrap in quotes if contains comma, quote, or newline
-        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        // Escape quotes by doubling them and wrap in quotes if contains comma, quote, newline, carriage return, or tab
+        if (
+            str.includes(',') ||
+            str.includes('"') ||
+            str.includes('\n') ||
+            str.includes('\r') ||
+            str.includes('\t')
+        ) {
             return `"${str.replace(/"/g, '""')}"`;
         }
         return str;

@@ -6313,7 +6313,9 @@ var OCRLogger = /** @class */ (function () {
             // Handle QuotaExceededError by clearing old logs and retrying
             if (error instanceof DOMException &&
                 (error.name === 'QuotaExceededError' ||
-                    error.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
+                    error.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+                    error.code === 22 ||
+                    error.code === 1014)) {
                 console.warn('Storage quota exceeded, clearing old logs and retrying');
                 this.clearOldLogs(Math.floor(this.MAX_LOG_ENTRIES / 2));
                 try {
@@ -6368,7 +6370,7 @@ var OCRLogger = /** @class */ (function () {
             var logs = this.getLogs();
             var dataStr = JSON.stringify(logs, null, 2);
             var dataBlob = new Blob([dataStr], { type: 'application/json' });
-            var timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            var timestamp = this.getTimestampForFilename();
             var filename = "ocr_logs_".concat(timestamp, ".json");
             this.downloadBlob(dataBlob, filename);
         }
@@ -6415,7 +6417,7 @@ var OCRLogger = /** @class */ (function () {
             });
             var csvContent = __spreadArray([headers.join(',')], rows, true).join('\n');
             var dataBlob = new Blob([csvContent], { type: 'text/csv' });
-            var timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            var timestamp = this.getTimestampForFilename();
             var filename = "ocr_logs_".concat(timestamp, ".csv");
             this.downloadBlob(dataBlob, filename);
         }
@@ -6471,10 +6473,17 @@ var OCRLogger = /** @class */ (function () {
     OCRLogger.prototype.saveLogs = function (logs) {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(logs));
     };
+    OCRLogger.prototype.getTimestampForFilename = function () {
+        return new Date().toISOString().replace(/[:.]/g, '-');
+    };
     OCRLogger.prototype.escapeCSV = function (value) {
         var str = String(value);
-        // Escape quotes by doubling them and wrap in quotes if contains comma, quote, or newline
-        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        // Escape quotes by doubling them and wrap in quotes if contains comma, quote, newline, carriage return, or tab
+        if (str.includes(',') ||
+            str.includes('"') ||
+            str.includes('\n') ||
+            str.includes('\r') ||
+            str.includes('\t')) {
             return "\"".concat(str.replace(/"/g, '""'), "\"");
         }
         return str;
@@ -7207,7 +7216,27 @@ function showLogStats() {
     var newestDate = stats.newestLog
         ? new Date(stats.newestLog).toLocaleString()
         : 'N/A';
-    logs.innerHTML = "\n        <div class=\"log-stats\">\n            <h3>OCR Log Statistics</h3>\n            <p><strong>Total Logs:</strong> ".concat(stats.total, "</p>\n            <p><strong>Errors:</strong> ").concat(stats.errors, "</p>\n            <p><strong>Avg Processing Time:</strong> ").concat(stats.avgProcessingTime, "ms</p>\n            <p><strong>Oldest Log:</strong> ").concat(oldestDate, "</p>\n            <p><strong>Newest Log:</strong> ").concat(newestDate, "</p>\n        </div>\n    ");
+    // Create elements safely without innerHTML
+    var statsDiv = document.createElement('div');
+    statsDiv.className = 'log-stats';
+    var title = document.createElement('h3');
+    title.textContent = 'OCR Log Statistics';
+    statsDiv.appendChild(title);
+    var createStatLine = function (label, value) {
+        var p = document.createElement('p');
+        var strong = document.createElement('strong');
+        strong.textContent = label + ': ';
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(String(value)));
+        return p;
+    };
+    statsDiv.appendChild(createStatLine('Total Logs', stats.total));
+    statsDiv.appendChild(createStatLine('Errors', stats.errors));
+    statsDiv.appendChild(createStatLine('Avg Processing Time', "".concat(stats.avgProcessingTime, "ms")));
+    statsDiv.appendChild(createStatLine('Oldest Log', oldestDate));
+    statsDiv.appendChild(createStatLine('Newest Log', newestDate));
+    logs.innerHTML = '';
+    logs.appendChild(statsDiv);
 }
 function exportLogsJSON() {
     logger.exportAsJSON();
@@ -7218,7 +7247,11 @@ function exportLogsCSV() {
 function clearLogs() {
     if (confirm('Are you sure you want to clear all logs?')) {
         logger.clearLogs();
-        logs.innerHTML = '<div class="text-center success">Logs cleared!</div>';
+        var messageDiv = document.createElement('div');
+        messageDiv.className = 'text-center success';
+        messageDiv.textContent = 'Logs cleared!';
+        logs.innerHTML = '';
+        logs.appendChild(messageDiv);
     }
 }
 
