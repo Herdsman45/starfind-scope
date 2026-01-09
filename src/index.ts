@@ -195,9 +195,13 @@ async function findDialogAndReadData(img: a1lib.ImgRef) {
 
 export function showLogStats() {
     const stats = logger.getStats();
-    const oldestDate = stats.oldestLog ? new Date(stats.oldestLog).toLocaleString() : 'N/A';
-    const newestDate = stats.newestLog ? new Date(stats.newestLog).toLocaleString() : 'N/A';
-    
+    const oldestDate = stats.oldestLog
+        ? new Date(stats.oldestLog).toLocaleString()
+        : 'N/A';
+    const newestDate = stats.newestLog
+        ? new Date(stats.newestLog).toLocaleString()
+        : 'N/A';
+
     logs.innerHTML = `
         <div class="log-stats">
             <h3>OCR Log Statistics</h3>

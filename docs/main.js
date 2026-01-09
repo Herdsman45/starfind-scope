@@ -7201,8 +7201,12 @@ function findDialogAndReadData(img) {
 }
 function showLogStats() {
     var stats = logger.getStats();
-    var oldestDate = stats.oldestLog ? new Date(stats.oldestLog).toLocaleString() : 'N/A';
-    var newestDate = stats.newestLog ? new Date(stats.newestLog).toLocaleString() : 'N/A';
+    var oldestDate = stats.oldestLog
+        ? new Date(stats.oldestLog).toLocaleString()
+        : 'N/A';
+    var newestDate = stats.newestLog
+        ? new Date(stats.newestLog).toLocaleString()
+        : 'N/A';
     logs.innerHTML = "\n        <div class=\"log-stats\">\n            <h3>OCR Log Statistics</h3>\n            <p><strong>Total Logs:</strong> ".concat(stats.total, "</p>\n            <p><strong>Errors:</strong> ").concat(stats.errors, "</p>\n            <p><strong>Avg Processing Time:</strong> ").concat(stats.avgProcessingTime, "ms</p>\n            <p><strong>Oldest Log:</strong> ").concat(oldestDate, "</p>\n            <p><strong>Newest Log:</strong> ").concat(newestDate, "</p>\n        </div>\n    ");
 }
 function exportLogsJSON() {

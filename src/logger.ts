@@ -53,7 +53,10 @@ export class OCRLogger {
                     logs.push(entry);
                     this.saveLogs(logs);
                 } catch (retryError) {
-                    console.error('Failed to save log after retry:', retryError);
+                    console.error(
+                        'Failed to save log after retry:',
+                        retryError
+                    );
                 }
             } else {
                 console.error('Error saving log:', error);
