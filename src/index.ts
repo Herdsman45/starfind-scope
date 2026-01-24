@@ -18,7 +18,7 @@ var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker: Tesseract.Worker;
 
-const version = '1.1.7';
+const version = '1.1.8';
 
 output.insertAdjacentHTML(
     'beforeend',
@@ -107,9 +107,9 @@ async function findDialogAndReadData(img: a1lib.ImgRef) {
 
         pixels = img.toData(
             dialog.x,
-            dialog.y + 20,
+            dialog.y,
             dialog.width,
-            dialog.height - 40
+            dialog.height - 10
         );
     } catch (err) {
         console.error(err);
