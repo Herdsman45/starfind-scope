@@ -97,7 +97,7 @@ export async function recognizeTextFromImage(
         finalText = finalText.replace('. to', ' to');
         finalText = finalText.replace('. next', ' next');
         finalText = finalText.replace(/\./g, '');
-        finalText = finalText.replace('S4', '54');
+        finalText = finalText.replace(/[S]([1-9])/g, '5$1');
         finalText = finalText.replace('3d', '34');
         finalText = finalText.replace('B minutes', '8 minutes');
         finalText = finalText.replace(/next(\d+)/g, 'next $1');
