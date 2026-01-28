@@ -144,6 +144,7 @@ export const getLocation = (input: string): string => {
         onia: 'Anachronia',
         Asgarnia: 'Asgarnia',
         Asgania: 'Asgarnia',
+        Asgamnia: 'Asgarnia',
         rnia: 'Asgarnia',
         Ashdale: 'Ashdale',
         dale: 'Ashdale',

@@ -6434,6 +6434,7 @@ var getLocation = function (input) {
         onia: 'Anachronia',
         Asgarnia: 'Asgarnia',
         Asgania: 'Asgarnia',
+        Asgamnia: 'Asgarnia',
         rnia: 'Asgarnia',
         Ashdale: 'Ashdale',
         dale: 'Ashdale',
@@ -6767,7 +6768,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker;
-var version = '1.1.9';
+var version = '1.1.10';
 output.insertAdjacentHTML('beforeend', "<div class=\"version\">v. ".concat(version, "</div>"));
 function init() {
     return __awaiter(this, void 0, void 0, function () {
