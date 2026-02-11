@@ -18,7 +18,7 @@ var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker: Tesseract.Worker;
 
-const version = '1.1.9';
+const version = '1.1.10';
 
 output.insertAdjacentHTML(
     'beforeend',
