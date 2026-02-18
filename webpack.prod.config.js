@@ -7,8 +7,10 @@ const baseConfig = require('./webpack.config.js');
  */
 module.exports = {
     ...baseConfig,
+    mode: 'production',
     output: {
         ...baseConfig.output,
         publicPath: '/starfind-scope/',
+        clean: true,
     },
 };
