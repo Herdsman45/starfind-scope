@@ -51,7 +51,15 @@ module.exports = {
                 generator: { filename: '[base]' },
             },
             {
-                test: /\.(html|json)$/,
+                test: /\.html$/,
+                type: 'asset/resource',
+                generator: { filename: '[base]' },
+            },
+            {
+                // only emit JSON files that live in `src/` (appconfig.json, etc.).
+                // avoid emitting root `package.json` or package.json from node_modules as assets
+                test: /\.json$/,
+                include: path.resolve(__dirname, 'src'),
                 type: 'asset/resource',
                 generator: { filename: '[base]' },
             },
