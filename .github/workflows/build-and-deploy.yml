@@ -5,6 +5,7 @@ on:
         branches:
             # This repo deploys from the `dev` branch (prerelease/fork version).
             # Upstream maintainers merging this workflow into main should change this to `main`.
+            - main
             - dev
     workflow_dispatch:
 
