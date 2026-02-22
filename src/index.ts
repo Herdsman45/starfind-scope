@@ -105,6 +105,10 @@ async function findDialogAndReadData(img: a1lib.ImgRef) {
         const diagReader = new DialogReader();
         const dialog: a1lib.RectLike = diagReader.find() as a1lib.RectLike;
 
+        if (!dialog || dialog.width <= 0 || dialog.height <= 0) {
+            throw new Error('No telescope dialog detected on screen');
+        }
+
         pixels = img.toData(
             dialog.x,
             dialog.y,
@@ -114,7 +118,6 @@ async function findDialogAndReadData(img: a1lib.ImgRef) {
     } catch (err) {
         console.error(err);
         logs.innerHTML = `<div class="error text-center">Please use a telescope in order to have data to read from!</div>`;
-
         return;
     }
 
