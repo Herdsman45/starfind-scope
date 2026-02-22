@@ -4,6 +4,7 @@ import './appconfig.json';
 import './icon.png';
 import './styles.css';
 import DialogReader from 'alt1/dialog';
+import pkg from '../package.json';
 
 import {
     copyToClipboard,
@@ -18,7 +19,7 @@ var output = document.getElementById('output');
 var logs = document.getElementById('logs');
 var worker: Tesseract.Worker;
 
-const version = '1.1.10';
+const version = (pkg as any).version || 'dev';
 
 output.insertAdjacentHTML(
     'beforeend',
